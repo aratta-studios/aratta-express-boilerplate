@@ -11,3 +11,19 @@ This is an express boilerplate which inspired from laravel framework with some s
 * Env
 * Sequelize Orm
 * mySql
+
+# Usage
+
+Install the aratta-express cli if it isn't already installed
+
+```
+npm i -g @aratta-studios/aratta-express
+```
+
+Then
+
+```
+aratta-express projectName
+```
+
+Then select aratta-express-boilerplate
