@@ -9,3 +9,5 @@ This is an express boilerplate which inspired from laravel framework with some s
 * MVC pattern
 * Migrations
 * Env
+* Sequelize Orm
+* mySql
