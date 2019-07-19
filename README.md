@@ -26,4 +26,4 @@ Then
 aratta-express projectName
 ```
 
-Then select aratta-express-boilerplate
+Select aratta-express-boilerplate
