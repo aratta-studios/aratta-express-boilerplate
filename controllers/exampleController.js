@@ -1,6 +1,7 @@
 import {User, Example} from '../models';
 import bcrypt from "bcrypt";
 import {jwtAuthenticate} from "../auth";
+import QueryHelper from "../helpers/queryHelper";
 
 export function login(req, res) {
   jwtAuthenticate({
@@ -24,17 +25,17 @@ export function signup(req, res) {
 }
 
 export function createUser(req, res) {
-  User.create(req.body).then(user => res.json({type: 'success', message: 'Test OK', data: user}));
+  new QueryHelper(User).create(req.body,res);
 }
 
 export function getUsers(req, res) {
-  User.findAll().then(user => res.json({type: 'success', message: 'Test OK', data: user,myUserId:req.userId}));
+  new QueryHelper(User).find(req.body,res).all();
 }
 
 export function createExample(req, res) {
-  Example.create(req.body).then(example => res.json({type: 'success', message: 'Test OK', data: example}));
+  new QueryHelper(Example).create(req.body,res);
 }
 
 export function getExamples(req, res) {
-  Example.findAll().then(example => res.json({type: 'success', message: 'Test OK', data: example}));
+  new QueryHelper(Example).find(req.body,res).all();
 }

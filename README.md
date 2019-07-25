@@ -34,6 +34,12 @@ cd projectName
 npm start
 ```
 
+# Db configuration
+
+Edit config/config.json
+
+Edit env/index.js
+
 # Models and migrations
 For models and migrations we used sequelize
 Read more in this link:
@@ -46,12 +52,196 @@ https://github.com/sequelize/sequelize-auto
 ```
 project name
   /auth ( authentication functions, currently configured for jwt authentication )
+  /config (database config for sequelize)
   /controllers (controllers)
   /env (project environment configurations)
   /migrations (sequelize migrations)
   /models (models)
   /routes (connects routes to controller functions)
 ```
+# Controllers
+Classes that containing functions that used in routes for getting response data or etc functions are something like this:
+```ecmascript 6
+import {Doctor} from '../models';
+import QueryHelper from "../helpers/queryHelper";
+
+/**
+ *
+ * @param req
+ * @param res
+ * @constructor
+ */
+export function createOrUpdateDoctor(req, res) {
+  const body = req.body;
+  new QueryHelper(Doctor).createOrUpdate(body, res);
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+export function readAllDoctors(req, res) {
+  new QueryHelper(Doctor).find(null, res).all();
+}
+
+// and so on ...
+```
+
+# Routes
+Something like this:
+```ecmascript 6
+import {createExample, ... , login, signup} from "../controllers/exampleController";
+
+module.exports = function(app){
+
+  app.post('/login', login);
+  app.post('/signup', signup);
+  app.post('/create-user', createUser);
+  app.post('/get-users',isJwtAuthenticated, getUsers);
+  app.post('/create-example',isJwtAuthenticated, createExample);
+  app.post('/get-examples',isJwtAuthenticated, getExamples);
+
+  //other routes..
+};
 
 
+```
 
+If you want your route protected by jwt just use isJwtAuthenticated middleware
+
+# Query Helper
+
+A class wrote to ease querying and returning data for api process.
+You can use it this way:
+
+Import (I use this class in my controller) :
+
+```ecmascript 6
+import QueryHelper from "../helpers/queryHelper";
+```
+Then use it:
+```ecmascript 6
+
+// create or update, body keys are your db names and if you have id so it updates otherwise creates a record
+export function createOrUpdatModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).createOrUpdate(body, res);
+}
+```
+response in the api is like:
+```json
+{
+    "type": "success",
+    "message": "updated!",
+    "data": {
+        "id": 4,
+        "name": "doctor3",
+        "website": "www.doctor3.com",
+        "address": "doctor3 address...",
+        "phone_number": "+18882223",
+        "email": "doctor3@gmail.com",
+        "createdAt": "2019-07-25T17:15:17.000Z",
+        "updatedAt": "2019-07-25T17:15:42.115Z"
+    }
+}
+```
+type = success or error
+message = message of event
+data = a json data structure if we needed data in our response
+```ecmascript 6
+
+// reads all model table contents
+/**
+ *
+ * @param req
+ * @param res
+ */
+export function readAllModel(req, res) {
+  new QueryHelper(Model).find(null, res).all();
+}
+```
+```ecmascript 6
+
+// reads all model table contents by pagination use page and pageSize in body to get the data
+/**
+ * req.body: {page,pageSize}
+ * @param req
+ * @param res
+ */
+export function readPaginatedModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).find(null, res).paginated(body.page,body.pageSize);
+}
+```
+```ecmascript 6
+
+// reads all model table contents by condition use where key in body to get the data
+/**
+ * req.body: {where}
+ * @param req
+ * @param res
+ */
+export function readConditionalModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).find(null, res).conditional(body.where,null);
+}
+```
+Example of where in request body:
+```json
+{
+	"where":{"id":{"$or":[2,3]} }
+}
+
+```
+Or
+```json
+{
+	"where":{"id":2, "name" : "doctor"}
+}
+```
+For Operators you can read in this link:
+https://sequelize.readthedocs.io/en/latest/docs/querying/#operators
+
+So you can query whatever you want in your request
+
+```ecmascript 6
+// read one 
+/**
+ * req.body: Doctor
+ * @param req
+ * @param res
+ */
+export function readOneModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).find(body, res).one();
+}
+
+// delete conditional
+
+/**
+ * req.body: {where}
+ * @param req
+ * @param res
+ */
+export function deleteConditionalModel(req, res) {
+  const condition = req.body.where;
+  new QueryHelper(Model).delete(condition, res);
+}
+
+// create
+
+export function createModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).create(body, res);
+}
+
+
+// update
+
+export function updateModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).update(body, res);
+}
+
+```

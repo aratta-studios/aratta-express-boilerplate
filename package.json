@@ -1,7 +1,7 @@
 {
-  "name": "vuenodeproject",
-  "version": "1.0.0",
-  "description": "A Vue with Node and Express back end Project",
+  "name": "aratta-express-boilerplate",
+  "version": "1.0.2",
+  "description": "Aratta express backend boilerplate",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
