@@ -2,6 +2,11 @@
 
 This is an express boilerplate which inspired from laravel framework with some simplifications.
 
+Special thanks to Bravebinary for helping us for making this happen you can check out their website through this link:
+
+http://bravebinary.com
+
+
 # Features
 
 * Easy jwt authentication
