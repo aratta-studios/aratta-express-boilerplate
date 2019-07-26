@@ -263,6 +263,13 @@ export function createModel(req, res) {
   new QueryHelper(Model).create(body, res);
 }
 
+// create without response
+
+export function createWithoutResponseModel(req, res) {
+  const body = req.body;
+  new QueryHelper(Model).createWithoutResponse(body, res);
+}
+
 
 // update
 

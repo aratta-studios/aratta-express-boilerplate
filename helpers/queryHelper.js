@@ -49,6 +49,14 @@ export default class QueryHelper {
   }
 
   /**
+   * Creates a new database record based on body without http response
+   * @param body
+   */
+  createWithoutResponse(body) {
+    this.model.create(body);
+  }
+
+  /**
    * Updates if id is defined in body, else creates
    * @param body
    * @param res
