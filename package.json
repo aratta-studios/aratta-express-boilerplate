@@ -1,6 +1,6 @@
 {
   "name": "aratta-express-boilerplate",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Aratta express backend boilerplate",
   "main": "index.js",
   "scripts": {

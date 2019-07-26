@@ -1,6 +1,3 @@
-import Sequelize from "sequelize";
-
-
 export default class QueryHelper {
 
   constructor(model) {
@@ -134,8 +131,8 @@ export default class QueryHelper {
         const limit = offset + parseInt(body.pageSize);
 
         return this.model.findAll({
-          limit,
-          offset,
+          limit:(body.page && body.pageSize)?limit:null,
+          offset:(body.page && body.pageSize)?offset:null,
           where: body.where,
           include: relations
         }).then(object => res.status(200).json({
