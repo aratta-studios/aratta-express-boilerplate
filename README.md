@@ -52,6 +52,11 @@ http://docs.sequelizejs.com/manual/migrations.html
 Also you can generate models from database using this library
 https://github.com/sequelize/sequelize-auto
 
+In the index.js in models folder, we connect sequelize with our database and configure this connection
+Also we link our models to sequelize and specify the associations and relations
+
+You can take a look at this file in the models/index.js and read the comments to learn more
+
 # Folder Structure
 
 ```
@@ -64,6 +69,7 @@ project name
   /models (models)
   /routes (connects routes to controller functions)
 ```
+
 # Controllers
 Classes that containing functions that used in routes for getting response data or etc functions are something like this:
 ```ecmascript 6
@@ -163,7 +169,11 @@ data = a json data structure if we needed data in our response
  * @param res
  */
 export function readAllModel(req, res) {
-  new QueryHelper(Model).find(null, res).all();
+  const relations = [
+     { model: Model1},
+     { model: Model2}
+  ];
+  new QueryHelper(Model).find(null, res,relations).all();
 }
 ```
 ```ecmascript 6
@@ -176,7 +186,11 @@ export function readAllModel(req, res) {
  */
 export function readPaginatedModel(req, res) {
   const body = req.body;
-  new QueryHelper(Model).find(null, res).paginated(body.page,body.pageSize);
+  const relations = [
+    { model: Model1},
+    { model: Model2}
+  ];
+  new QueryHelper(Model).find(body, res,relations).paginated();
 }
 ```
 ```ecmascript 6
@@ -189,7 +203,11 @@ export function readPaginatedModel(req, res) {
  */
 export function readConditionalModel(req, res) {
   const body = req.body;
-  new QueryHelper(Model).find(null, res).conditional(body.where,null);
+  const relations = [
+    { model: Model1},
+    { model: Model2}
+  ];
+  new QueryHelper(Model).find(body, res,relations).conditional();
 }
 ```
 Example of where in request body:
@@ -219,7 +237,11 @@ So you can query whatever you want in your request
  */
 export function readOneModel(req, res) {
   const body = req.body;
-  new QueryHelper(Model).find(body, res).one();
+  const relations = [
+     { model: Model1},
+     { model: Model2}
+  ];
+  new QueryHelper(Model).find(body, res,relations).one();
 }
 
 // delete conditional

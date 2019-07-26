@@ -4,6 +4,15 @@ import bcrypt from 'bcrypt';
 import mysql from 'mysql';
 
 
+/**
+ * this function checks if user entered correct username and password returns token in the header if it's correct
+ * @param username
+ * @param password
+ * @param usersTable
+ * @param usernameField
+ * @param passwordField
+ * @param res
+ */
 export function jwtAuthenticate({username, password, usersTable, usernameField, passwordField}, res) {
   const db = mysql.createConnection({user: env.username, password: env.password, database: env.database});
 
@@ -30,7 +39,13 @@ export function jwtAuthenticate({username, password, usersTable, usernameField, 
   })
 }
 
-
+/**
+ * this middleware checks if controller receives correct jwt token in header in authorization field
+ * @param req
+ * @param res
+ * @param next
+ * @returns {any | Promise<any>}
+ */
 export function isJwtAuthenticated(req, res, next) {
   // do any checks you want to in here
 
