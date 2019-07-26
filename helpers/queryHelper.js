@@ -68,17 +68,18 @@ export default class QueryHelper {
    * @param relations
    * @returns {{all: (function(): Promise<T | never>), paginated: (function(*=, *=): Promise<T | never>), conditional: (function(*=, *=): Promise<T | never>), one: (function(): Promise<T | never>)}}
    */
-  find(body, res,relations) {
+  find(body, res, relations) {
     return {
       /**
        * finds all records for given model in the class constructor
        * @returns {Promise<T | never>}
        */
-      all: () => this.model.findAll().then(object => res.status(200).json({
+      all: () => this.model.findAll({
+        include: relations
+      }).then(object => res.status(200).json({
         type: 'success',
         message: 'found all!',
-        data: object,
-        include: relations
+        data: object
       })).catch(e => res.status(200).json({
         type: 'Error',
         message: e.message,
@@ -88,11 +89,13 @@ export default class QueryHelper {
        * finds one record for given model in the class constructor based on id in the request body
        * @returns {Promise<T | never>}
        */
-      one: () => this.model.findOne({where: {id: body.id}}).then(object => res.status(200).json({
+      one: () => this.model.findOne({
+        where: {id: body.id},
+        include: relations
+      }).then(object => res.status(200).json({
         type: 'success',
         message: 'found requested',
-        data: object,
-        include: relations
+        data: object
       })).catch(e => res.status(200).json({
         type: 'Error',
         message: e.message,
@@ -131,8 +134,8 @@ export default class QueryHelper {
         const limit = offset + parseInt(body.pageSize);
 
         return this.model.findAll({
-          limit:(body.page && body.pageSize)?limit:null,
-          offset:(body.page && body.pageSize)?offset:null,
+          limit: (body.page && body.pageSize) ? limit : null,
+          offset: (body.page && body.pageSize) ? offset : null,
           where: body.where,
           include: relations
         }).then(object => res.status(200).json({
